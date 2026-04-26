@@ -51,7 +51,6 @@ Inputs
 
 ### Notes
 
-- If you have any bugs and or bans please open a issue saying the mods you had enabled, how long you cheated for, etc.
 - This is the one and ONLY official repository, other ones are not maintained or verified by me. They may contain malicious releases / code.
 - This may not work on certain games.
 <hr></hr>
