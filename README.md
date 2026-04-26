@@ -3,8 +3,8 @@
 </p>
 <div align="center">
   
-![GitHub](https://img.shields.io/github/license/xfi0//Titled-PC-Template?style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/xfi0//Titled-PC-Template?style=flat-square)
+![GitHub](https://img.shields.io/github/license/xfi0/Titled-PC-Template?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/xfi0/Titled-PC-Template?style=flat-square)
 ![GitHub stars](https://img.shields.io/github/stars/xfi0/Titled-PC-Template?style=flat-square)
 
 </div>
