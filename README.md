@@ -1,7 +1,61 @@
-<center>
-<h1>Titled Template</h1>
-  <p>Please star this if you found it useful, or used it!</p>
-</center>
+<p align="center">
+  <img src="https://github.com/xfi0/Titled-Gui-CS2/blob/master/Resources/MenuLogo.png?raw=true" alt="Template Logo" width="300">
+</p>
+<div align="center">
+  
+![GitHub](https://img.shields.io/github/license/xfi0//Titled-PC-Template?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/xfi0//Titled-PC-Template?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/xfi0/Titled-PC-Template?style=flat-square)
 
-## Why Use Titled PC Template
-### This template is continusly updating, has a clean, simple backend, is perfect for beginners, and is completly free!
+</div>
+<hr></hr>
+
+<p align="center">Titled Template is an simple, easy to use, template.</p>
+<p align="center">⭐Please, star this repo if you enjoyed it!⭐</p>
+
+<hr></hr>
+
+## 🌐 Community  
+![Discord](https://invidget.switchblade.xyz/SXV8Bmy4Tt)
+<hr></hr>
+
+## 📖 Licensing
+This project is licensed under Mit, More information in LICENSE
+**TL;DR:** You may use this freely.
+<hr></hr>
+
+## 🛠 Features
+
+Buttons, toggles, enable / disable methods, update method.
+Inputs
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Windows 10/11 (x64)
+- Visual Studio 2026 / 2022
+- .NET framework v4.7.2
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/xfi0/Titled-PC-Template.git
+   cd Titled-Gui-CS2
+   ```
+  2. Run the solution in debug / release mode (x64)
+
+### Useage
+1. Place the compiled DLL into your bepinex plugins.
+
+### Notes
+
+- If you have any bugs and or bans please open a issue saying the mods you had enabled, how long you cheated for, etc.
+- This is the one and ONLY official repository, other ones are not maintained or verified by me. They may contain malicious releases / code.
+- This may not work on certain games.
+<hr></hr>
+
+<img src="https://github.com/xfi0/Titled-Gui-CS2/blob/master/Docs/Preview1.png">
+
+<hr></hr>
