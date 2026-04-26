@@ -27,7 +27,12 @@ namespace Titled_PC_Template.Mods
             },
             // room mods [3]
             new ButtonInfo[] {
-                new ButtonInfo{ DisplayText = "Disconnect", IsToggle = false, Method = () => PhotonNetwork.Disconnect() }
+                new ButtonInfo{ DisplayText = "Disconnect", IsToggle = false, Method = () => PhotonNetwork.Disconnect() },
+                new ButtonInfo{ DisplayText = "Join Random", IsToggle = false, Method = () => PhotonNetwork.JoinRandomRoom() },
+                new ButtonInfo{ DisplayText = "Room Code", IsInput = true, },
+                new ButtonInfo{ DisplayText = "Create Private", IsToggle = false, Method = () => Room.CreatePrivateRoom(Main.GetIndex("Private Code").InputValue) },
+                new ButtonInfo{ DisplayText = "Create Public", IsToggle = false, Method = () => Room.CreatePublicRoom(Main.GetIndex("Private Code").InputValue) },
+
             },
         };
     }

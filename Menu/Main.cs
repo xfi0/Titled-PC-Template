@@ -71,13 +71,22 @@ namespace Titled_PC_Template
             {
                 if (Mods[i] != null)
                 {
-                    if (Mods[i] != null && !Mods[i].IsTab)
+                    if (Mods[i] != null && !Mods[i].IsTab && !Mods[i].IsInput)
                     {
                         int currentRow = i / Columns;
                         int currentCol = i % Columns;
                         Rect buttonRect = new Rect(190, 40 + (i * 37), 130, 35);
 
-                        GUI.Button(buttonRect, Mods[i].DisplayText);
+                        if (GUI.Button(buttonRect, Mods[i].DisplayText))
+                        {
+                            RunEnabled(Mods[i].DisplayText);
+                        }
+                    }
+                    else
+                    {
+                        Rect inputRect = new Rect(190, 40 + (i * 37), 130, 35);
+
+                        Mods[i].InputValue = GUI.TextField(inputRect, Mods[i].InputValue);
                     }
                 }
             }

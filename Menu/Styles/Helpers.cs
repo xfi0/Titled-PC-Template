@@ -13,6 +13,10 @@ namespace Titled_PC_Template.Menu.Styles
         {
             var texture = new Texture2D(2, 2);
             texture.SetPixel(0, 0, color);
+            texture.SetPixel(1, 0, color);
+            texture.SetPixel(0, 1, color);
+            texture.SetPixel(1, 1, color);
+            texture.Apply();
 
             return texture;
         }

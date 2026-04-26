@@ -367,6 +367,7 @@
     <Compile Include="Menu\Styles\Helpers.cs" />
     <Compile Include="Menu\Styles\Window.cs" />
     <Compile Include="Mods\Buttons.cs" />
+    <Compile Include="Mods\Room.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
