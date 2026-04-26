@@ -55,7 +55,3 @@ Inputs
 - This is the one and ONLY official repository, other ones are not maintained or verified by me. They may contain malicious releases / code.
 - This may not work on certain games.
 <hr></hr>
-
-<img src="https://github.com/xfi0/Titled-Gui-CS2/blob/master/Docs/Preview1.png">
-
-<hr></hr>
