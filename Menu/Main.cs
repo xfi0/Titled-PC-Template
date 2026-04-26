@@ -71,25 +71,56 @@ namespace Titled_PC_Template
             {
                 if (Mods[i] != null)
                 {
-                    if (Mods[i] != null && !Mods[i].IsTab && !Mods[i].IsInput)
-                    {
-                        int currentRow = i / Columns;
-                        int currentCol = i % Columns;
-                        Rect buttonRect = new Rect(190, 40 + (i * 37), 130, 35);
+                    float currentRow = i / Columns;
+                    float currentCol = i % Columns;
+                    float startY = 40;
+                    float buttonStartY = 65;
+                    float buttonStartX = 190;
+                    float buttonOffsetY = 100;
+                    float buttonOffsetX = 210;
+                    float inputStartY = 65;
+                    float inputStartX = 190;
+                    float inputOffsetY = 100;
+                    float inputOffsetX = 210;
+                    float buttonPlatformOffsetX = 210;
+                    float buttonPlatformOffsetY = 85;
+                    float textStartX = 190;
+                    float textStartY = 40;
 
-                        if (GUI.Button(buttonRect, Mods[i].DisplayText))
+                    CreatePlatform(buttonStartX, buttonStartY, buttonOffsetX, buttonOffsetY, startY, currentCol, currentRow);
+                    if (!Mods[i].IsTab && !Mods[i].IsInput)
+                    {
+                        Rect buttonRect = new Rect(buttonStartX + (currentCol * buttonOffsetX), buttonStartY + (currentRow * buttonOffsetY), 25, 25);
+
+                        Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
+                        GUI.Label(textRect, Mods[i].DisplayText);
+                        if (GUI.Button(buttonRect, "", Window.buttonStyle))
                         {
                             RunEnabled(Mods[i].DisplayText);
                         }
                     }
                     else
                     {
-                        Rect inputRect = new Rect(190, 40 + (i * 37), 130, 35);
-
+                        Rect inputRect = new Rect(inputStartX + (currentCol * inputOffsetX), inputStartY + (currentRow * inputOffsetY), 180, 25);
+                        Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
+                        GUI.Label(textRect, Mods[i].DisplayText);
                         Mods[i].InputValue = GUI.TextField(inputRect, Mods[i].InputValue);
                     }
                 }
             }
+        }
+        
+        private static void CreatePlatform(float buttonStartX, float buttonStartY, float buttonOffsetX, float buttonOffsetY, float startY, float currentCol, float currentRow)
+        {
+            float buttonPlatformOffsetX = 210;
+            float buttonPlatformOffsetY = 85;
+            float platformStartX = 190;
+
+            Rect breakRect = new Rect(buttonStartX + (currentCol * buttonOffsetX + 5), buttonStartY + (currentRow * buttonOffsetY), 180, 15);
+            Rect buttonPlatformRect = new Rect(platformStartX + (currentCol * buttonPlatformOffsetX), startY + (currentRow * buttonPlatformOffsetY), 200, 75);
+
+            GUI.Box(breakRect, "", Window.buttonStyle);
+            GUI.Box(buttonPlatformRect, "", Window.buttonPlatformStyle);
         }
 
         void Update()

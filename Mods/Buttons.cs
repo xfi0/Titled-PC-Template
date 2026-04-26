@@ -1,11 +1,13 @@
 ﻿using GorillaNetworking;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Titled_PC_Template.Classes;
+using UnityEngine;
 
 namespace Titled_PC_Template.Mods
 {
@@ -15,7 +17,8 @@ namespace Titled_PC_Template.Mods
             // tabs [0]
             new ButtonInfo[] {
                 new ButtonInfo{ DisplayText = "Settings", IsTab = true, TabToChangeTo = 1 },
-                new ButtonInfo{ DisplayText = "Room", IsTab = true, TabToChangeTo = 3 }
+                new ButtonInfo{ DisplayText = "Room", IsTab = true, TabToChangeTo = 3 },
+                new ButtonInfo{ DisplayText = "Other", IsTab = true, TabToChangeTo = 4 }
             },
             // settings [1]
             new ButtonInfo[] {
@@ -30,9 +33,13 @@ namespace Titled_PC_Template.Mods
                 new ButtonInfo{ DisplayText = "Disconnect", IsToggle = false, Method = () => PhotonNetwork.Disconnect() },
                 new ButtonInfo{ DisplayText = "Join Random", IsToggle = false, Method = () => PhotonNetwork.JoinRandomRoom() },
                 new ButtonInfo{ DisplayText = "Room Code", IsInput = true, },
-                new ButtonInfo{ DisplayText = "Create Private", IsToggle = false, Method = () => Room.CreatePrivateRoom(Main.GetIndex("Private Code").InputValue) },
-                new ButtonInfo{ DisplayText = "Create Public", IsToggle = false, Method = () => Room.CreatePublicRoom(Main.GetIndex("Private Code").InputValue) },
+                new ButtonInfo{ DisplayText = "Create Private", IsToggle = false, Method = () => Room.CreatePrivateRoom(Main.GetIndex("Room Code").InputValue  ?? "") },
+                new ButtonInfo{ DisplayText = "Create Public", IsToggle = false, Method = () => Room.CreatePublicRoom(Main.GetIndex("Room Code").InputValue ?? "") },
 
+            },
+            // other [4]
+            new ButtonInfo[] {
+                new ButtonInfo{ DisplayText = "Log All Id's", IsToggle = false, Method = () => { foreach (Player player in PhotonNetwork.PlayerListOthers) Debug.Log(player.UserId); } },
             },
         };
     }

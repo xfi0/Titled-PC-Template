@@ -12,9 +12,13 @@ namespace Titled_PC_Template.Menu.Styles
     {
         public static Rect windowRect = new Rect(100, 100, 800, 500);
         public static GUIStyle windowStyle = new GUIStyle();
+        public static GUIStyle buttonPlatformStyle = new GUIStyle();
+        public static GUIStyle buttonStyle = new GUIStyle();
         public static void InitializeWindowStyles()
         {
-            windowStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex("#2F3333"));
+            windowStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex("#101010"));
+            buttonPlatformStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex("#090909"));
+            buttonStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex("#222222"));
         }
     
     }

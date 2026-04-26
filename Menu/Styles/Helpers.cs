@@ -21,6 +21,29 @@ namespace Titled_PC_Template.Menu.Styles
             return texture;
         }
 
+        public static Texture2D CreateRoundedTexture(Color color, int radius)
+        {
+            var texture = new Texture2D(radius * 2, radius * 2);
+            for (int x = 0; x < texture.width; x++)
+            {
+                for (int y = 0; y < texture.height; y++)
+                {
+                    float distance = Vector2.Distance(new Vector2(x, y), new Vector2(radius, radius));
+                    if (distance <= radius)
+                    {
+                        texture.SetPixel(x, y, color);
+                    }
+                    else
+                    {
+                        texture.SetPixel(x, y, Color.clear);
+                    }
+                }
+            }
+
+            texture.Apply();
+            return texture;
+        }
+
         internal static Color CreateColorFromHex(string v)
         {
             Color temp;

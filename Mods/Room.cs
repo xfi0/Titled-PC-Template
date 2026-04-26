@@ -1,6 +1,7 @@
 ﻿using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;
+using PlayFab;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +23,15 @@ namespace Titled_PC_Template.Mods
             "gameMode",
             PhotonNetworkController.Instance.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode
         } });
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.IsVisible = true;
-            roomOptions.IsOpen = true;
-            roomOptions.MaxPlayers = 10;
-            roomOptions.CustomRoomProperties = customRoomProperties;
-            roomOptions.PublishUserId = true;
-            roomOptions.CustomRoomPropertiesForLobby = new string[1] { "gameMode" };
+            RoomOptions roomOptions = new RoomOptions
+            {
+                IsVisible = true,
+                IsOpen = true,
+                MaxPlayers = 10,
+                CustomRoomProperties = customRoomProperties,
+                PublishUserId = true,
+                CustomRoomPropertiesForLobby = new string[1] { "gameMode" }
+            };
 
             PhotonNetwork.CreateRoom(code, roomOptions);
         }
@@ -41,13 +44,15 @@ namespace Titled_PC_Template.Mods
             "gameMode",
             PhotonNetworkController.Instance.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode
         } };
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.IsVisible = false;
-            roomOptions.IsOpen = true;
-            roomOptions.MaxPlayers = 10;
-            roomOptions.CustomRoomProperties = customRoomProperties;
-            roomOptions.PublishUserId = true;
-            roomOptions.CustomRoomPropertiesForLobby = new string[1] { "gameMode" };
+            RoomOptions roomOptions = new RoomOptions
+            {
+                IsVisible = false,
+                IsOpen = true,
+                MaxPlayers = 10,
+                CustomRoomProperties = customRoomProperties,
+                PublishUserId = true,
+                CustomRoomPropertiesForLobby = new string[1] { "gameMode" }
+            };
             PhotonNetwork.CreateRoom(code, roomOptions);
         }
     }
