@@ -22,10 +22,12 @@ namespace Titled_PC_Template.Mods
             },
             // settings [1]
             new ButtonInfo[] {
+                new ButtonInfo{ DisplayText = "Return to Main", IsTab = true, TabToChangeTo = 0 },
                 new ButtonInfo{ DisplayText = "Menu Settings", IsTab = true, TabToChangeTo = 2 }
             },
             // menu settings [2]
             new ButtonInfo[] {
+                new ButtonInfo{ DisplayText = "Return to Settings", IsTab = true, TabToChangeTo = 1 },
                 new ButtonInfo{ DisplayText = "Example Setting", IsToggle = true }
             },
             // room mods [3]
@@ -39,7 +41,7 @@ namespace Titled_PC_Template.Mods
             },
             // other [4]
             new ButtonInfo[] {
-                new ButtonInfo{ DisplayText = "Log All Id's", IsToggle = false, Method = () => { foreach (Player player in PhotonNetwork.PlayerListOthers) Debug.Log(player.UserId); } },
+                new ButtonInfo{ DisplayText = "Log All Id's", IsToggle = false, Method = () => { foreach (Player player in PhotonNetwork.PlayerList) Debug.Log(player.NickName + " - " + player.UserId); } },
             },
         };
     }

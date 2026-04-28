@@ -364,7 +364,9 @@
   <ItemGroup>
     <Compile Include="Classes\ButtonInfo.cs" />
     <Compile Include="Menu\Main.cs" />
+    <Compile Include="Menu\Styles\Button.cs" />
     <Compile Include="Menu\Styles\Helpers.cs" />
+    <Compile Include="Menu\Styles\Tab.cs" />
     <Compile Include="Menu\Styles\Window.cs" />
     <Compile Include="Mods\Buttons.cs" />
     <Compile Include="Mods\Room.cs" />

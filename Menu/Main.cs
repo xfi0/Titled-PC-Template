@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using Photon.Pun;
 using Photon.Voice.PUN.UtilityScripts;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Titled_PC_Template
         public static int ButtonsPerPage = 6;
         public static int Columns = 2;
         public static int Rows = 3;
+        public static int[] ParentTab = Enumerable.Repeat(-1, Buttons.buttons.Length).ToArray();
 
 
         void Awake()
@@ -31,6 +33,9 @@ namespace Titled_PC_Template
         void OnGUI()
         {
             Window.InitializeWindowStyles();
+            Button.InitializeButtonStyles();
+            Tab.InitializeTabStyles();
+
             Window.windowRect = UnityEngine.GUI.Window(10000, Window.windowRect, InitializeGUI, "", Window.windowStyle);
         }
 
@@ -48,20 +53,44 @@ namespace Titled_PC_Template
 
         private static void CreateTabs()
         {
-            var Tabs = Buttons.buttons[0].Where(b => b.IsTab).ToArray();
+            var tabGroup = GetTabGroup();
+            var tabs = Buttons.buttons[tabGroup].Where(b => b != null && b.IsTab).ToArray();
 
-            float startY2 = 40;
-            for (int i = 0; i < Tabs.Length; i++)
+            float startY = 40;
+            for (int i = 0; i < tabs.Length; i++)
             {
-                Rect buttonRect = new Rect(5, startY2 + (i * 37), 130, 35);
-                bool isSelected = (CurrentTab == Tabs[i].TabToChangeTo);
+                Rect buttonRect = new Rect(5, startY + (i * 37), 130, 35);
+                bool isSelected = (CurrentTab == tabs[i].TabToChangeTo);
 
-                if (UnityEngine.GUI.Button(buttonRect, Tabs[i].DisplayText))
+                if (UnityEngine.GUI.Button(buttonRect, tabs[i].DisplayText, Tab.tabStyle))
                 {
-                    CurrentTab = Tabs[i].TabToChangeTo;
-                    RunEnabled(Tabs[i].DisplayText);
+                    if (CurrentTab == tabs[i].TabToChangeTo)
+                        return;
+                    
+
+                    ParentTab[tabs[i].TabToChangeTo] = CurrentTab;
+                    CurrentTab = tabs[i].TabToChangeTo;
+                    RunEnabled(tabs[i].DisplayText);
                 }
             }
+        }
+
+        private static int GetTabGroup()
+        {
+            int group = CurrentTab;
+            HashSet<int> visited = new HashSet<int>();
+
+            while (group >= 0 && !visited.Contains(group))
+            {
+                visited.Add(group);
+
+                if (Buttons.buttons[group].Any(b => b != null && b.IsTab))
+                    return group;
+
+                group = ParentTab[group];
+            }
+
+            return 0;
         }
 
         private static void CreateMods()
@@ -94,12 +123,12 @@ namespace Titled_PC_Template
 
                         Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
                         GUI.Label(textRect, Mods[i].DisplayText);
-                        if (GUI.Button(buttonRect, "", Window.buttonStyle))
+                        if (GUI.Button(buttonRect, "", Button.buttonStyle))
                         {
                             RunEnabled(Mods[i].DisplayText);
                         }
                     }
-                    else
+                    else if (Mods[i].IsInput)
                     {
                         Rect inputRect = new Rect(inputStartX + (currentCol * inputOffsetX), inputStartY + (currentRow * inputOffsetY), 180, 25);
                         Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
@@ -119,8 +148,8 @@ namespace Titled_PC_Template
             Rect breakRect = new Rect(buttonStartX + (currentCol * buttonOffsetX + 5), buttonStartY + (currentRow * buttonOffsetY), 180, 15);
             Rect buttonPlatformRect = new Rect(platformStartX + (currentCol * buttonPlatformOffsetX), startY + (currentRow * buttonPlatformOffsetY), 200, 75);
 
-            GUI.Box(breakRect, "", Window.buttonStyle);
-            GUI.Box(buttonPlatformRect, "", Window.buttonPlatformStyle);
+            GUI.Box(breakRect, "", Button.buttonStyle);
+            GUI.Box(buttonPlatformRect, "", Button.buttonPlatformStyle);
         }
 
         void Update()
