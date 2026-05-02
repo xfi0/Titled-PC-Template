@@ -5,8 +5,10 @@ using PlayFab;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Titled_PC_Template.Mods
 {
@@ -14,15 +16,21 @@ namespace Titled_PC_Template.Mods
     {
         public static void CreatePublicRoom(string code)
         {
-            ExitGames.Client.Photon.Hashtable customRoomProperties = ((!(PhotonNetworkController.Instance.currentJoinTrigger.gameModeName != "city")) ? new ExitGames.Client.Photon.Hashtable {
+            var gamemodeButton = Main.GetIndex("Gamemode");
+            if (gamemodeButton == null)
+            {
+                Debug.LogError("Gamemode button was not found.");
+                return;
+            }
+            var currentJoinTrigger = PhotonNetworkController.Instance.currentJoinTrigger ?? GameObject.FindAnyObjectByType<GorillaNetworkJoinTrigger>();
+            var currentTrigger = currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + gamemodeButton.Items[gamemodeButton.DropdownIndex].ToUpper() ?? currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode; Debug.Log("currentTrigger: " + currentTrigger);
+
+            ExitGames.Client.Photon.Hashtable customRoomProperties = new ExitGames.Client.Photon.Hashtable {
         {
             "gameMode",
-            PhotonNetworkController.Instance.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + "CASUAL"
-        } } : new ExitGames.Client.Photon.Hashtable {
-        {
-            "gameMode",
-            PhotonNetworkController.Instance.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode
-        } });
+            currentTrigger
+        } };
+
             RoomOptions roomOptions = new RoomOptions
             {
                 IsVisible = true,
@@ -38,11 +46,20 @@ namespace Titled_PC_Template.Mods
 
         public static void CreatePrivateRoom(string code)
         {
+            var gamemodeButton = Main.GetIndex("Gamemode");
+            if (gamemodeButton == null)
+            {
+                Debug.LogError("Gamemode button was not found.");
+                return;
+            }
+            var currentJoinTrigger = PhotonNetworkController.Instance.currentJoinTrigger ?? GameObject.FindAnyObjectByType<GorillaNetworkJoinTrigger>();
+            var currentTrigger = currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + gamemodeButton.Items[gamemodeButton.DropdownIndex].ToUpper() ?? currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode;
+            Debug.Log("currentTrigger: " + currentTrigger);
             PhotonNetworkController.Instance.currentJoinTrigger = PhotonNetworkController.Instance.privateTrigger;
             ExitGames.Client.Photon.Hashtable customRoomProperties = new ExitGames.Client.Photon.Hashtable {
         {
             "gameMode",
-            PhotonNetworkController.Instance.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode
+            currentTrigger
         } };
             RoomOptions roomOptions = new RoomOptions
             {

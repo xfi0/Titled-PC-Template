@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Titled_PC_Template.Notifications;
 using Titled_PC_Template.Classes;
 using Titled_PC_Template.Menu.Styles;
 using Titled_PC_Template.Mods;
@@ -35,13 +36,14 @@ namespace Titled_PC_Template
             Window.InitializeWindowStyles();
             Button.InitializeButtonStyles();
             Tab.InitializeTabStyles();
+            Menu.Styles.Input.InitializeInputStyles();
 
             Window.windowRect = UnityEngine.GUI.Window(10000, Window.windowRect, InitializeGUI, "", Window.windowStyle);
         }
 
         private static void InitializeGUI(int windowID)
         {
-            UnityEngine.GUI.Box(new Rect(0, 0, 140, Window.windowRect.height), "");
+            UnityEngine.GUI.Box(new Rect(0, 0, 140, Window.windowRect.height), "", Tab.tabContainerStyle);
             UnityEngine.GUI.Box(new Rect(140, 0, Window.windowRect.width - 140, Window.windowRect.height), "");
 
             UnityEngine.GUI.Label(new Rect(15, 5, 200, 30), MenuName);
@@ -95,45 +97,83 @@ namespace Titled_PC_Template
 
         private static void CreateMods()
         {
-            ButtonInfo[] Mods = Buttons.buttons[CurrentTab].Skip(PageNumber * ButtonsPerPage).Take(ButtonsPerPage).ToArray();
-            for (int i = 0; i < Mods.Length && i < Columns * Rows; i++)
+            ButtonInfo[] mods = Buttons.buttons[CurrentTab].Skip(PageNumber * ButtonsPerPage).Take(ButtonsPerPage).ToArray();
+
+            int openDropdownIndex = -1;
+            float openCol = 0;
+            float openRow = 0;
+            float startY = 40;
+            float buttonStartY = 65;
+            float buttonStartX = 190;
+            float buttonOffsetY = 100;
+            float buttonOffsetX = 210;
+            float inputStartY = 65;
+            float inputStartX = 190;
+            float inputOffsetY = 100;
+            float inputOffsetX = 210;
+            float buttonPlatformOffsetX = 210;
+            float buttonPlatformOffsetY = 85;
+            float textStartX = 190;
+            float textStartY = 40;
+
+            for (int i = 0; i < mods.Length && i < Columns * Rows; i++)
             {
-                if (Mods[i] != null)
+                if (mods[i] != null)
                 {
                     float currentRow = i / Columns;
                     float currentCol = i % Columns;
-                    float startY = 40;
-                    float buttonStartY = 65;
-                    float buttonStartX = 190;
-                    float buttonOffsetY = 100;
-                    float buttonOffsetX = 210;
-                    float inputStartY = 65;
-                    float inputStartX = 190;
-                    float inputOffsetY = 100;
-                    float inputOffsetX = 210;
-                    float buttonPlatformOffsetX = 210;
-                    float buttonPlatformOffsetY = 85;
-                    float textStartX = 190;
-                    float textStartY = 40;
 
                     CreatePlatform(buttonStartX, buttonStartY, buttonOffsetX, buttonOffsetY, startY, currentCol, currentRow);
-                    if (!Mods[i].IsTab && !Mods[i].IsInput)
+                    if (mods[i].IsButton)
                     {
-                        Rect buttonRect = new Rect(buttonStartX + (currentCol * buttonOffsetX), buttonStartY + (currentRow * buttonOffsetY), 25, 25);
+                        Rect buttonRect = new Rect(buttonStartX + (currentCol * buttonOffsetX + 5), buttonStartY + (currentRow * buttonOffsetY), 25, 25);
 
                         Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
-                        GUI.Label(textRect, Mods[i].DisplayText);
+                        GUI.Label(textRect, mods[i].DisplayText);
                         if (GUI.Button(buttonRect, "", Button.buttonStyle))
                         {
-                            RunEnabled(Mods[i].DisplayText);
+                            RunEnabled(mods[i].DisplayText);
                         }
                     }
-                    else if (Mods[i].IsInput)
+                    else if (mods[i].IsInput)
                     {
                         Rect inputRect = new Rect(inputStartX + (currentCol * inputOffsetX), inputStartY + (currentRow * inputOffsetY), 180, 25);
                         Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
-                        GUI.Label(textRect, Mods[i].DisplayText);
-                        Mods[i].InputValue = GUI.TextField(inputRect, Mods[i].InputValue);
+                        GUI.Label(textRect, mods[i].DisplayText);
+                        mods[i].InputValue = GUI.TextField(inputRect, mods[i].InputValue, Menu.Styles.Input.inputStyle);
+                    }
+                    else if (mods[i].IsDropdown)
+                    {
+                        Rect dropdownRect = new Rect(inputStartX + (currentCol * inputOffsetX), inputStartY + (currentRow * inputOffsetY), 180, 25);
+                        Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
+                        
+                        GUI.Label(textRect, mods[i].DisplayText);
+                        if (GUI.Button(dropdownRect, mods[i].Items[mods[i].DropdownIndex], Button.buttonStyle))
+                        {
+                            mods[i].DropdownOpen = !mods[i].DropdownOpen;
+                        }
+
+                        if (mods[i].DropdownOpen)
+                        {
+                            openDropdownIndex = i;
+                            openCol = currentCol;
+                            openRow = currentRow;
+                        }
+                    }
+                }
+                if (openDropdownIndex != -1)
+                {
+                    ButtonInfo mod = mods[openDropdownIndex];
+
+                    for (int item = 0; item < mod.Items.Length; item++)
+                    {
+                        Rect itemRect = new Rect(inputStartX + (openCol * inputOffsetX), inputStartY + (openRow * inputOffsetY) + ((item + 1) * 25), 180, 25);
+                        if (GUI.Button(itemRect, mod.Items[item], Button.buttonStyle))
+                        {
+                            mod.DropdownIndex = item;
+                            mod.DropdownOpen = false;
+                            RunEnabled(mod.DisplayText);
+                        }
                     }
                 }
             }
@@ -183,7 +223,7 @@ namespace Titled_PC_Template
                     target.IsEnabled = !target.IsEnabled;
                     if (target.IsEnabled)
                     {
-                        //Library.SendNotification("<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> " + target.toolTip);
+                        Library.SendNotification("<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> " + target.ToolTip);
                         if (target.OnEnable != null)
                         {
                             try
@@ -198,7 +238,7 @@ namespace Titled_PC_Template
                     }
                     else
                     {
-                        //Library.SendNotification("<color=grey>[</color><color=red>DISABLE</color><color=grey>]</color> " + target.toolTip);
+                        Library.SendNotification("<color=grey>[</color><color=red>DISABLE</color><color=grey>]</color> " + target.ToolTip);
                         if (target.OnEnable != null)
                         {
                             try
@@ -214,7 +254,7 @@ namespace Titled_PC_Template
                 }
                 else
                 {
-                    //Library.SendNotification("<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> " + target.toolTip);
+                    Library.SendNotification("<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> " + target.ToolTip);
                     if (target.Method != null)
                     {
                         try
@@ -242,6 +282,7 @@ namespace Titled_PC_Template
                 {
                     if (button == null)
                         continue;
+                    
 
                     if (button.DisplayText == buttonText)
                     {
@@ -250,6 +291,7 @@ namespace Titled_PC_Template
                 }
             }
 
+            Debug.LogError("Could not find: " + buttonText);
             return null;
         }
     }

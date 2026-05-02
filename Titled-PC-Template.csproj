@@ -366,10 +366,12 @@
     <Compile Include="Menu\Main.cs" />
     <Compile Include="Menu\Styles\Button.cs" />
     <Compile Include="Menu\Styles\Helpers.cs" />
+    <Compile Include="Menu\Styles\Input.cs" />
     <Compile Include="Menu\Styles\Tab.cs" />
     <Compile Include="Menu\Styles\Window.cs" />
     <Compile Include="Mods\Buttons.cs" />
     <Compile Include="Mods\Room.cs" />
+    <Compile Include="Notifications\Library.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

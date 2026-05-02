@@ -11,6 +11,7 @@ namespace Titled_PC_Template.Menu.Styles
     {
         public static string buttonPlatformBackgroundColor = "#090909";
         public static string buttonBackgroundColor = "#222222";
+        public static string buttonTextColor = "#FFFFFF";
         public static GUIStyle buttonPlatformStyle = new GUIStyle();
         public static GUIStyle buttonStyle = new GUIStyle();
 
@@ -18,6 +19,7 @@ namespace Titled_PC_Template.Menu.Styles
         {
             buttonPlatformStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex(buttonPlatformBackgroundColor));
             buttonStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex(buttonBackgroundColor));
+            buttonStyle.normal.textColor = Helpers.CreateColorFromHex(buttonTextColor);
         }
     }
 }
