@@ -17,6 +17,7 @@ namespace Titled_PC_Template.Menu.Styles
             inputStyle = new GUIStyle();
             inputStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex(inputBackgroundColor));
             inputStyle.normal.textColor = Color.white;
+            inputStyle.padding = new RectOffset(10, 10, 5, 5);
         }
     }
 }

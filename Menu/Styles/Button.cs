@@ -20,6 +20,7 @@ namespace Titled_PC_Template.Menu.Styles
             buttonPlatformStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex(buttonPlatformBackgroundColor));
             buttonStyle.normal.background = Helpers.CreateTexture(Helpers.CreateColorFromHex(buttonBackgroundColor));
             buttonStyle.normal.textColor = Helpers.CreateColorFromHex(buttonTextColor);
+            buttonStyle.padding = new RectOffset(10, 10, 5, 5);
         }
     }
 }
