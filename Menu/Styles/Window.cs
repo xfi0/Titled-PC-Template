@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using Titled_PC_Template.Menu.Styles;
+﻿using UnityEngine;
 
 namespace Titled_PC_Template.Menu.Styles
 {

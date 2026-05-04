@@ -369,10 +369,15 @@
     <Compile Include="Menu\Styles\Input.cs" />
     <Compile Include="Menu\Styles\Tab.cs" />
     <Compile Include="Menu\Styles\Window.cs" />
+    <Compile Include="Menu\Widgets\Button.cs" />
+    <Compile Include="Menu\Widgets\Dropdown.cs" />
+    <Compile Include="Menu\Widgets\Input.cs" />
     <Compile Include="Mods\Buttons.cs" />
     <Compile Include="Mods\Room.cs" />
     <Compile Include="Notifications\Library.cs" />
+    <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

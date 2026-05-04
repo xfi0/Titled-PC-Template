@@ -1,21 +1,13 @@
 ﻿using BepInEx;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Playables;
-using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using Viveport;
-using static System.Net.Mime.MediaTypeNames;
 using Text = UnityEngine.UI.Text;
 
 namespace Titled_PC_Template.Notifications
 {
-    [BepInPlugin("org.titled.notifications", "library", "1.0.0")]
+    [BepInPlugin("com.titled.notifications", "library", "1.0.0")]
     public class Library : BaseUnityPlugin
     {
         private void Start()
@@ -23,12 +15,7 @@ namespace Titled_PC_Template.Notifications
             base.Logger.LogInfo("Plugin NotificationLibrary is loaded!");
             Initialize();
         }
-        private class Notification
-        {
-            public string Content;
-            public float ExpireTime;
-        }
-        private static readonly List<Notification> notifications = new List<Notification>();
+
         public static void Initialize()
         {
             if (Camera.main == null)
@@ -39,6 +26,7 @@ namespace Titled_PC_Template.Notifications
 
             MainCamera = Camera.main.gameObject;
             NotificationChild = new GameObject("notification-child");
+            NotificationChild.transform.position = new Vector3(MainCamera.transform.position.x, MainCamera.transform.position.y + 1f, MainCamera.transform.position.z - 20f);
 
             NotificationContainer = new GameObject("notification-container");
             NotificationContainer.AddComponent<Canvas>();
@@ -48,7 +36,6 @@ namespace Titled_PC_Template.Notifications
             NotificationContainer.GetComponent<Canvas>().worldCamera = MainCamera.GetComponent<Camera>();
             NotificationContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(5f, 5f);
             NotificationContainer.GetComponent<RectTransform>().position = new Vector3(MainCamera.transform.position.x, MainCamera.transform.position.y + 1f, MainCamera.transform.position.z - 20f);
-            NotificationChild.transform.position = new Vector3(MainCamera.transform.position.x, MainCamera.transform.position.y + 1f, MainCamera.transform.position.z - 20f);
             NotificationContainer.transform.parent = NotificationChild.transform;
             NotificationContainer.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 1.6f);
             Vector3 eulerAngles = NotificationContainer.GetComponent<RectTransform>().rotation.eulerAngles;
@@ -56,11 +43,11 @@ namespace Titled_PC_Template.Notifications
             NotificationContainer.transform.localScale = new Vector3(1f, 1f, 1f);
             NotificationContainer.GetComponent<RectTransform>().rotation = Quaternion.Euler(eulerAngles);
 
-            CanvasScaler cs = NotificationContainer.AddComponent<CanvasScaler>();
-            cs.dynamicPixelsPerUnit = 1f;
-            cs.referencePixelsPerUnit = 2500f;
-            cs.scaleFactor = 1f;
-            NotifiText = new GameObject
+            CanvasScaler canvasScaler = NotificationContainer.AddComponent<CanvasScaler>();
+            canvasScaler.dynamicPixelsPerUnit = 1f;
+            canvasScaler.referencePixelsPerUnit = 2500f;
+            canvasScaler.scaleFactor = 1f;
+            NotificationText = new GameObject
             {
                 transform =
                 {
@@ -68,15 +55,15 @@ namespace Titled_PC_Template.Notifications
                 }
             }.AddComponent<UnityEngine.UI.Text>();
 
-            NotifiText.text = "";
-            NotifiText.fontSize = 18;
-            NotifiText.font = AgencyFB;
-            NotifiText.rectTransform.sizeDelta = new Vector2(700f, 400f);
-            NotifiText.alignment = TextAnchor.LowerLeft;
-            NotifiText.resizeTextForBestFit = false;
-            NotifiText.rectTransform.localScale = new Vector3(0.00333333333f, 0.00333333333f, 0.33333333f);
-            NotifiText.rectTransform.localPosition = new Vector3(0f, -1f, -1f);
-            NotifiText.material = new Material(Shader.Find("GUI/Text Shader"));
+            NotificationText.text = "";
+            NotificationText.fontSize = FontSize;
+            NotificationText.font = NotificationFont;
+            NotificationText.rectTransform.sizeDelta = new Vector2(700f, 400f);
+            NotificationText.alignment = TextAnchor.LowerLeft;
+            NotificationText.resizeTextForBestFit = false;
+            NotificationText.rectTransform.localScale = new Vector3(0.0033f, 0.0033f, 0.33f);
+            NotificationText.rectTransform.localPosition = new Vector3(0f, -1f, -1f);
+            NotificationText.material = new Material(Shader.Find("GUI/Text Shader"));
         }
 
         private void Update()
@@ -98,65 +85,45 @@ namespace Titled_PC_Template.Notifications
                     sb.AppendLine(notification.Content);
                 }
 
-                NotifiText.text = sb.ToString();
+                NotificationText.text = sb.ToString();
             }
             else
-                NotifiText.text = "";
-            
+                NotificationText.text = "";
         }
         public static void SendNotification(string text)
         {
-            try
-            {
-                if (IsEnabled)
-                {
-                    float displayTime = Mathf.Max(2.0f, text.Length * 0.1f);
+            if (!IsEnabled)
+                return;
 
-                    notifications.Add(new Notification
-                    {
-                        Content = text,
-                        ExpireTime = Time.time + displayTime
-                    });
+            float displayTime = Mathf.Max(2.0f, text.Length * TimeOffsetPerCharacter);
 
-                    while (notifications.Count > NoticationThreshold)
-                    {
-                        notifications.RemoveAt(0);
-                    }
-                }
-            }
-            catch (Exception ex)
+            notifications.Add(new Notification
             {
-                UnityEngine.Debug.LogError($"Notification failed: {ex.Message}");
+                Content = text,
+                ExpireTime = Time.time + displayTime
+            });
+
+            while (notifications.Count > NotificationThreshold)
+            {
+                notifications.RemoveAt(0);
             }
         }
       
         public static void ClearAllNotifications()
         {
-            Library.NotifiText.text = "";
-        }
-
-        public static void ClearPastNotifications(int amount)
-        {
-            string text = "";
-            foreach (string text2 in Enumerable.ToArray<string>(Enumerable.Skip<string>(Library.NotifiText.text.Split(Environment.NewLine.ToCharArray()), amount)))
-            {
-                if (text2 != "")
-                {
-                    text = text + text2 + "\n";
-                }
-            }
-            NotifiText.text = text;
+            notifications.Clear();
+            Library.NotificationText.text = "";
         }
 
         private static GameObject NotificationContainer;
         private static GameObject NotificationChild;
         private static GameObject MainCamera;
-        public static int NoticationThreshold = 30;
-        private string[] Notifilines;
-        private string newtext;
-        public static string PreviousNotifi;
-        private static Text NotifiText;
+        public static Font NotificationFont = Font.CreateDynamicFontFromOSFont("Agency FB", 24) ?? Resources.GetBuiltinResource<Font>("Arial.ttf");
+        private static Text NotificationText;
+        private static readonly List<Notification> notifications = new List<Notification>();
+        public static int NotificationThreshold = 30;
+        public static int FontSize = 18;
         public static bool IsEnabled = true;
-        public static Font AgencyFB = Font.CreateDynamicFontFromOSFont("Agency FB", 24);
+        public static float TimeOffsetPerCharacter = 0.05f;
     }
 }

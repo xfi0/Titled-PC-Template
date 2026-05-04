@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Titled_PC_Template.Menu.Styles
 {
@@ -44,7 +39,7 @@ namespace Titled_PC_Template.Menu.Styles
             return texture;
         }
 
-        internal static Color CreateColorFromHex(string v)
+        public static Color CreateColorFromHex(string v)
         {
             Color temp;
             UnityEngine.ColorUtility.TryParseHtmlString(v, out temp);

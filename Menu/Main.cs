@@ -1,16 +1,21 @@
 ﻿using BepInEx;
-using Photon.Pun;
-using Photon.Voice.PUN.UtilityScripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Titled_PC_Template.Notifications;
 using Titled_PC_Template.Classes;
 using Titled_PC_Template.Menu.Styles;
+using Titled_PC_Template.Menu.Widgets;
 using Titled_PC_Template.Mods;
+using Titled_PC_Template.Notifications;
 using UnityEngine;
+
+// README
+// This template is completely free to use, modify, and distribute under the MIT license.
+// The project can be found at https://github.com/xfi0/Titled-PC-Template, where you can also report any issues or request features.
+// If you paid for this template, or did not recieve it from a official source such as my github, you may have been scammed.
+// Credits are cool, but not really needed.
+// Thanks
+
 
 namespace Titled_PC_Template
 {
@@ -23,6 +28,7 @@ namespace Titled_PC_Template
         public static int ButtonsPerPage = 6;
         public static int Columns = 2;
         public static int Rows = 3;
+        public static readonly int WindowId = MenuName.GetHashCode();
         public static int[] ParentTab = Enumerable.Repeat(-1, Buttons.buttons.Length).ToArray();
 
 
@@ -33,12 +39,16 @@ namespace Titled_PC_Template
 
         void OnGUI()
         {
-            Window.InitializeWindowStyles();
-            Button.InitializeButtonStyles();
-            Tab.InitializeTabStyles();
+            Menu.Styles.Window.InitializeWindowStyles();
+            Menu.Styles.Button.InitializeButtonStyles();
+            Menu.Styles.Tab.InitializeTabStyles();
             Menu.Styles.Input.InitializeInputStyles();
 
-            Window.windowRect = UnityEngine.GUI.Window(10000, Window.windowRect, InitializeGUI, "", Window.windowStyle);
+            Window.windowRect = UnityEngine.GUI.Window(WindowId, Window.windowRect, InitializeGUI, "", Window.windowStyle);
+        }
+        void Update()
+        {
+            HandleEnabledButtons();
         }
 
         private static void InitializeGUI(int windowID)
@@ -62,14 +72,16 @@ namespace Titled_PC_Template
             for (int i = 0; i < tabs.Length; i++)
             {
                 Rect buttonRect = new Rect(5, startY + (i * 37), 130, 35);
-                bool isSelected = (CurrentTab == tabs[i].TabToChangeTo);
+                bool isSelected = CurrentTab == tabs[i].TabToChangeTo;
+
+                if (isSelected)
+                {
+                    UnityEngine.GUI.Button(buttonRect, tabs[i].DisplayText, Tab.tabStyleActive);
+                    continue;
+                }
 
                 if (UnityEngine.GUI.Button(buttonRect, tabs[i].DisplayText, Tab.tabStyle))
                 {
-                    if (CurrentTab == tabs[i].TabToChangeTo)
-                        return;
-                    
-
                     ParentTab[tabs[i].TabToChangeTo] = CurrentTab;
                     CurrentTab = tabs[i].TabToChangeTo;
                     RunEnabled(tabs[i].DisplayText);
@@ -97,7 +109,7 @@ namespace Titled_PC_Template
 
         private static void CreateMods()
         {
-            ButtonInfo[] mods = Buttons.buttons[CurrentTab].Skip(PageNumber * ButtonsPerPage).Take(ButtonsPerPage).ToArray();
+            ButtonInfo[] mods = Buttons.buttons[CurrentTab].Where(b => b != null & !b.IsTab).Skip(PageNumber * ButtonsPerPage).Take(ButtonsPerPage).ToArray();
 
             int openDropdownIndex = -1;
             float openCol = 0;
@@ -113,8 +125,7 @@ namespace Titled_PC_Template
             float inputOffsetX = 210;
             float buttonPlatformOffsetX = 210;
             float buttonPlatformOffsetY = 85;
-            float textStartX = 190;
-            float textStartY = 40;
+            float platformStartX = 190;
 
             for (int i = 0; i < mods.Length && i < Columns * Rows; i++)
             {
@@ -126,59 +137,35 @@ namespace Titled_PC_Template
                     CreatePlatform(buttonStartX, buttonStartY, buttonOffsetX, buttonOffsetY, startY, currentCol, currentRow);
                     if (mods[i].IsButton)
                     {
-                        Rect buttonRect = new Rect(buttonStartX + (currentCol * buttonOffsetX + 5), buttonStartY + (currentRow * buttonOffsetY), 25, 25);
-
-                        Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
-                        GUI.Label(textRect, mods[i].DisplayText);
-                        if (GUI.Button(buttonRect, "", Button.buttonStyle))
-                        {
-                            RunEnabled(mods[i].DisplayText);
-                        }
+                        Menu.Widgets.Button.CreateButton(mods, i, platformStartX, buttonPlatformOffsetX, buttonPlatformOffsetY, startY, currentCol, currentRow);
                     }
                     else if (mods[i].IsInput)
                     {
-                        Rect inputRect = new Rect(inputStartX + (currentCol * inputOffsetX), inputStartY + (currentRow * inputOffsetY), 180, 25);
-                        Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
-                        GUI.Label(textRect, mods[i].DisplayText);
-                        mods[i].InputValue = GUI.TextField(inputRect, mods[i].InputValue, Menu.Styles.Input.inputStyle);
+                        Menu.Widgets.Input.CreateInput(mods, inputStartY, inputOffsetY, i, platformStartX, buttonPlatformOffsetX, buttonPlatformOffsetY, startY, currentRow, currentCol);
                     }
                     else if (mods[i].IsDropdown)
                     {
-                        Rect dropdownRect = new Rect(inputStartX + (currentCol * inputOffsetX), inputStartY + (currentRow * inputOffsetY), 180, 25);
-                        Rect textRect = new Rect(textStartX + (currentCol * buttonPlatformOffsetX), textStartY + (currentRow * buttonPlatformOffsetY), 200, 200);
-                        
-                        GUI.Label(textRect, mods[i].DisplayText);
-                        if (GUI.Button(dropdownRect, mods[i].Items[mods[i].DropdownIndex], Button.buttonStyle))
-                        {
-                            mods[i].DropdownOpen = !mods[i].DropdownOpen;
-                        }
-
-                        if (mods[i].DropdownOpen)
-                        {
-                            openDropdownIndex = i;
-                            openCol = currentCol;
-                            openRow = currentRow;
-                        }
+                        Menu.Widgets.Dropdown.CreateDropdown(mods, ref openDropdownIndex, ref openCol, ref openRow, inputStartY, inputStartX, inputOffsetY, inputOffsetX, buttonPlatformOffsetX, buttonPlatformOffsetY, platformStartX, startY, i, currentRow, currentCol);
                     }
                 }
-                if (openDropdownIndex != -1)
-                {
-                    ButtonInfo mod = mods[openDropdownIndex];
+            }
+            if (openDropdownIndex != -1)
+            {
+                ButtonInfo mod = mods[openDropdownIndex];
 
-                    for (int item = 0; item < mod.Items.Length; item++)
+                for (int item = 0; item < mod.Items.Length; item++)
+                {
+                    Rect itemRect = new Rect(inputStartX + (openCol * inputOffsetX), inputStartY + (openRow * inputOffsetY) + ((item + 1) * 25), 180, 25);
+                    if (GUI.Button(itemRect, mod.Items[item], Menu.Styles.Button.buttonStyle))
                     {
-                        Rect itemRect = new Rect(inputStartX + (openCol * inputOffsetX), inputStartY + (openRow * inputOffsetY) + ((item + 1) * 25), 180, 25);
-                        if (GUI.Button(itemRect, mod.Items[item], Button.buttonStyle))
-                        {
-                            mod.DropdownIndex = item;
-                            mod.DropdownOpen = false;
-                            RunEnabled(mod.DisplayText);
-                        }
+                        mod.DropdownIndex = item;
+                        mod.DropdownOpen = false;
+                        RunEnabled(mod.DisplayText);
                     }
                 }
             }
         }
-        
+
         private static void CreatePlatform(float buttonStartX, float buttonStartY, float buttonOffsetX, float buttonOffsetY, float startY, float currentCol, float currentRow)
         {
             float buttonPlatformOffsetX = 210;
@@ -188,13 +175,8 @@ namespace Titled_PC_Template
             Rect breakRect = new Rect(buttonStartX + (currentCol * buttonOffsetX + 5), buttonStartY + (currentRow * buttonOffsetY), 180, 15);
             Rect buttonPlatformRect = new Rect(platformStartX + (currentCol * buttonPlatformOffsetX), startY + (currentRow * buttonPlatformOffsetY), 200, 75);
 
-            GUI.Box(breakRect, "", Button.buttonStyle);
-            GUI.Box(buttonPlatformRect, "", Button.buttonPlatformStyle);
-        }
-
-        void Update()
-        {
-            HandleEnabledButtons();
+            GUI.Box(breakRect, "", Menu.Styles.Button.buttonStyle);
+            GUI.Box(buttonPlatformRect, "", Menu.Styles.Button.buttonPlatformStyle);
         }
 
         private static void HandleEnabledButtons()
@@ -209,10 +191,6 @@ namespace Titled_PC_Template
             }
         }
 
-        private static void CreateButton(ButtonInfo buttonInfo)
-        {
-
-        }
         public static void RunEnabled(string buttonText)
         {
             ButtonInfo target = GetIndex(buttonText);
