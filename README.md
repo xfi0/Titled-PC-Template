@@ -35,6 +35,7 @@ Dropdowns.
 ### Prerequisites
 
 - Windows 10/11 (x64)
+- Bepinex
 - Visual Studio 2022 / 2026
 - .NET framework v4.7.2
 
