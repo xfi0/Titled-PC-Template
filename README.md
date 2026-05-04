@@ -26,15 +26,17 @@ This project is licensed under Mit, More information in LICENSE
 
 ## 🛠 Features
 
-Buttons, toggles, enable / disable methods, update method.
-Inputs
+Buttons, toggles, enable / disable methods, and update methods.
+Inputs.
+Dropdowns.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
 - Windows 10/11 (x64)
-- Visual Studio 2026 / 2022
+- Bepinex
+- Visual Studio 2022 / 2026
 - .NET framework v4.7.2
 
 ### Installation
