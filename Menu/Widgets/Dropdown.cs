@@ -10,21 +10,20 @@ namespace Titled_PC_Template.Menu.Widgets
 {
     internal class Dropdown
     {
-        public static void CreateDropdown(ButtonInfo[] mods, ref int openDropdownIndex, ref float openCol, ref float openRow, float inputStartY, float inputStartX, float inputOffsetY, float inputOffsetX, float buttonPlatformOffsetX, float buttonPlatformOffsetY, float platformStartX, float startY, int i, float currentRow, float currentCol)
+        public static void CreateDropdown(ButtonInfo mod, ref int openDropdownIndex, ref float openCol, ref float openRow, float inputStartY, float inputStartX, float inputOffsetY, float inputOffsetX, float buttonPlatformOffsetX, float buttonPlatformOffsetY, float platformStartX, float startY, int i, float currentRow, float currentCol)
         {
             float platformX = platformStartX + (currentCol * buttonPlatformOffsetX);
             float platformY = startY + (currentRow * buttonPlatformOffsetY);
 
-            Rect dropdownRect = new Rect(inputStartX + (currentCol * inputOffsetX), inputStartY + (currentRow * inputOffsetY), 180, 25);
-            Rect textRect = new Rect(platformX + 5, platformY + 10, 200, 200);
+            Rect dropdownRect = new Rect(platformX + 12, platformY + 40, Styles.Dropdown.DropdownWidth, Styles.Dropdown.DropdownHeight);
+            Rect textRect = new Rect(platformX + 7, platformY + 5, 200, 200);
 
-            GUI.Label(textRect, mods[i].DisplayText);
-            if (GUI.Button(dropdownRect, mods[i].Items[mods[i].DropdownIndex], Menu.Styles.Button.buttonStyle))
-            {
-                mods[i].DropdownOpen = !mods[i].DropdownOpen;
-            }
+            GUI.Label(textRect, mod.DisplayText);
+            if (GUI.Button(dropdownRect, mod.Items[mod.DropdownIndex], Menu.Styles.Dropdown.DropdownStyle))
+                mod.DropdownOpen = !mod.DropdownOpen;
+            
 
-            if (mods[i].DropdownOpen)
+            if (mod.DropdownOpen)
             {
                 openDropdownIndex = i;
                 openCol = currentCol;

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Titled_PC_Template.Classes
 {
@@ -11,6 +12,7 @@ namespace Titled_PC_Template.Classes
         public bool IsToggle = false; // is it a toggle? if true on click it will run on enabled, if clicked again it will run on disable, and every frame it runs method.
         public bool IsInput = false; // is it a string input?
         public bool IsDropdown = false; // is it a dropdown?
+        public bool IsColorPicker = false; // is it a color picker?
         public bool DropdownOpen = false; // is the dropdown open?
         public int TabToChangeTo = 0; // tab button changes to (if its a tab)
         public int DropdownIndex = 0; // dropdown selected index
@@ -19,6 +21,7 @@ namespace Titled_PC_Template.Classes
         public Action Method; // every frame, (if toggle)
         public string[] Items; // items in the dropdown
         public string InputValue = string.Empty;
-        public string ToolTip = "This button does not have a tooltip."; // sent by notif lib
+        public Color ColorPickerColor = Color.white;
+        public string ToolTip = "This button does not have a tooltip."; // sent by notif lib on button press.
     }
 }

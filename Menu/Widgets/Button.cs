@@ -10,18 +10,26 @@ namespace Titled_PC_Template.Menu.Widgets
 {
     internal class Button
     {
-        public static void CreateButton(ButtonInfo[] mods, int i, float platformStartX, float buttonPlatformOffsetX, float buttonPlatformOffsetY, float startY, float currentCol, float currentRow)
+        public static void CreateButton(ButtonInfo mod, float platformStartX, float buttonPlatformOffsetX, float buttonPlatformOffsetY, float startY, float currentCol, float currentRow)
         {
             float platformX = platformStartX + (currentCol * buttonPlatformOffsetX);
             float platformY = startY + (currentRow * buttonPlatformOffsetY);
 
-            Rect buttonRect = new Rect(platformX + 10, platformY + 40, 25, 25);
-            Rect textRect = new Rect(platformX + 5, platformY + 10, 200, 200);
+            Rect buttonRect = new Rect(platformX + 12, platformY + 40, Styles.Button.buttonWidth, Styles.Button.buttonWidth);
+            Rect textRect = new Rect(platformX + 7, platformY + 5, 200, 200);
 
-            GUI.Label(textRect, mods[i].DisplayText);
-            if (GUI.Button(buttonRect, "", Styles.Button.buttonStyle))
+            GUI.Label(textRect, mod.DisplayText);
+            if (mod.IsEnabled)
             {
-                Main.RunEnabled(mods[i].DisplayText);
+                if (GUI.Button(buttonRect, "", Styles.Button.ButtonStyleActive))
+                    Main.RunEnabled(mod.DisplayText);
+
+                return;
+            }
+
+            if (GUI.Button(buttonRect, "", Styles.Button.ButtonStyle))
+            {
+                Main.RunEnabled(mod.DisplayText);
             }
         }
     }

@@ -363,17 +363,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ButtonInfo.cs" />
+    <Compile Include="Extensions\VRRigExtensions.cs" />
     <Compile Include="Menu\Main.cs" />
     <Compile Include="Menu\Styles\Button.cs" />
+    <Compile Include="Menu\Styles\Dropdown.cs" />
     <Compile Include="Menu\Styles\Helpers.cs" />
     <Compile Include="Menu\Styles\Input.cs" />
+    <Compile Include="Menu\Styles\Platform.cs" />
     <Compile Include="Menu\Styles\Tab.cs" />
     <Compile Include="Menu\Styles\Window.cs" />
     <Compile Include="Menu\Widgets\Button.cs" />
+    <Compile Include="Menu\Widgets\ColorPicker.cs" />
     <Compile Include="Menu\Widgets\Dropdown.cs" />
     <Compile Include="Menu\Widgets\Input.cs" />
+    <Compile Include="Menu\Widgets\Platform.cs" />
     <Compile Include="Mods\Buttons.cs" />
+    <Compile Include="Mods\Photon.cs" />
     <Compile Include="Mods\Room.cs" />
+    <Compile Include="Mods\Visuals.cs" />
     <Compile Include="Notifications\Library.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
